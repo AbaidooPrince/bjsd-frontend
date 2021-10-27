@@ -122,7 +122,7 @@
         </v-row>
       </v-container>
     </v-sheet>
-    <v-sheet height="70vh"> </v-sheet>
+    <!-- <v-sheet height="70vh"> </v-sheet> -->
     <v-sheet color="grey lighten-4 py-8">
       <v-container id="register">
         <v-row
