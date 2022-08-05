@@ -26,7 +26,7 @@
       <v-container grid-list-xs>
         <v-row>
           <v-col cols="12" md="12">
-            <h2 class="text-h3">What you will learn</h2>
+            <!-- <h2 class="text-h3">What you will learn</h2> -->
           </v-col>
           <v-col cols="12" md="4">
             <v-card flat outlined tile class="mx-auto">
@@ -125,6 +125,7 @@
     <!-- <v-sheet height="70vh"> </v-sheet> -->
     <v-sheet color="grey lighten-4 py-8">
       <v-container id="register">
+        <v-form @submit.prevent="register">
         <v-row
           align="center"
           class="pa-lg-12"
@@ -135,13 +136,24 @@
           </v-col>
           <v-col cols="12" lg="6" class="py-0">
             <label class="subtitle font-weight-bold">First Name</label>
-            <v-text-field class="rounded-0" dense outlined> </v-text-field>
+            <v-text-field v-model="registerStudent.firstName" class="rounded-0" dense outlined> </v-text-field>
           </v-col>
           <v-col cols="12" lg="6" class="py-0">
             <label class="subtitle font-weight-bold">Last Name</label>
-            <v-text-field class="rounded-0" dense outlined>
+            <v-text-field v-model="registerStudent.lastName" class="rounded-0" dense outlined>
             </v-text-field> </v-col
-          ><v-col cols="12" lg="8" class="py-0">
+          >
+          <v-col cols="12" lg="6" class="py-0">
+            <label class="subtitle font-weight-bold">Email</label>
+            <v-text-field v-model="registerUser.email"
+            :rules="[required('Email')]"
+            class="rounded-0" dense outlined> </v-text-field>
+          </v-col>
+          <v-col cols="12" lg="6" class="py-0">
+            <label class="subtitle font-weight-bold">Phone</label>
+            <v-text-field v-model="registerStudent.phone" class="rounded-0" dense outlined> </v-text-field>
+          </v-col>
+          <v-col cols="12" lg="8" class="py-0">
             <label class="subtitle font-weight-bold">Chose an option:</label>
             <div>
               <small
@@ -149,9 +161,9 @@
                 <b>backend</b> if your interest is in NodeJs</small
               >
             </div>
-            <v-radio-group class="mt-0" row>
-              <v-radio label="Frontend"> </v-radio>
-              <v-radio label="Backend"> </v-radio>
+            <v-radio-group v-model="registerStudent.option" class="mt-0" row>
+              <v-radio :value="true" label="Frontend"> </v-radio>
+              <v-radio :value="false" label="Backend"> </v-radio>
             </v-radio-group>
           </v-col>
           <v-col cols="12" lg="8" class="py-0">
@@ -164,7 +176,7 @@
                 are held.</small
               >
             </div>
-            <v-select class="rounded-0" dense :items="preferredHours" outlined>
+            <v-select v-model="registerStudent.classHours" class="rounded-0" dense :items="preferredHours" outlined>
             </v-select>
           </v-col>
           <v-col cols="12" lg="8" class="py-0">
@@ -178,7 +190,7 @@
                 <i>Other Information</i> field.</small
               >
             </div>
-            <v-select class="rounded-0" dense :items="level" outlined>
+            <v-select v-model="registerStudent.javascriptLevel" class="rounded-0" dense :items="level" outlined>
             </v-select>
           </v-col>
           <v-col cols="12" lg="8" class="py-0">
@@ -191,7 +203,7 @@
                 sessions</small
               >
             </div>
-            <v-select class="rounded-0" dense :items="video" outlined>
+            <v-select v-model="registerStudent.video" class="rounded-0" dense :items="video" outlined>
             </v-select>
           </v-col>
           <v-col cols="12" lg="12" class="py-0">
@@ -202,34 +214,58 @@
                 know, send them here.</small
               >
             </div>
-            <v-textarea auto-grow class="rounded-0" rows="4" dense outlined>
+            <v-textarea v-model="registerStudent.otherInformation" auto-grow class="rounded-0" rows="4" dense outlined>
             </v-textarea>
           </v-col>
           <v-col cols="12" lg="12" class="py-0">
             <label class="subtitle font-weight-bold"
               >Your expectation for this training:</label
             >
-            <v-textarea auto-grow class="rounded-0" rows="4" dense outlined>
+            <v-textarea v-model="registerStudent.expectation" auto-grow class="rounded-0" rows="4" dense outlined>
             </v-textarea>
           </v-col>
           <v-col class="text-center" cols="12" md="12">
-            <v-btn outlined width="250" rounded>
+            <v-btn type="submit" outlined width="250" rounded>
               Register
             </v-btn>
           </v-col>
         </v-row>
+        </v-form>
       </v-container>
     </v-sheet>
   </div>
 </template>
 
 <script>
+import Api from '../Services/api'
+import validation from '../Services/validation'
 // import VueHtmlEditor from 'vue-html-editor'
 export default {
   name: 'HomePage',
   components: {},
   data () {
     return {
+      ...validation,
+      // eslint-disable-next-line no-undef
+      registerUser: new Form({
+        username: '',
+        email: '',
+        password: 'P@$$w0rd.123',
+        role: '1'
+      }),
+      // eslint-disable-next-line no-undef
+      registerStudent: new Form({
+        firstName: '',
+        lastName: '',
+        phone: '',
+        option: '',
+        classHours: '',
+        javascriptLevel: '',
+        video: '',
+        otherInformation: '',
+        expectation: '',
+        users_permissions_user: ''
+      }),
       video: ['Zoom', 'Google Meet'],
       text: 'Hello World!',
       level: [
@@ -254,6 +290,13 @@ export default {
             'Experience real-world agile software development with your team'
         }
       ]
+    }
+  },
+  methods: {
+    register () {
+      this.registerUser.username = this.registerStudent.firstName + this.registerStudent.lastName
+      Api().post('/auth/local/register', this.registerStudent).then((response) => [
+      ])
     }
   }
 }

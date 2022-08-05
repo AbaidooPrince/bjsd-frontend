@@ -1,5 +1,5 @@
-const apiUrl = 'https://bjsd-frontend.vercel.app/'
-// const socketUrl = 'http://localhost:3001'
+// const apiUrl = 'https://bjsd-frontend.vercel.app/'
+const apiUrl = 'http://localhost:1337/'
 
 module.exports = {
   api: apiUrl
